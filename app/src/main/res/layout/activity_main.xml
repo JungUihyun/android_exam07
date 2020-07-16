@@ -40,20 +40,20 @@
             android:inputType="textPassword"
             android:hint="Your Password"/>
 
-            <Button
-                android:layout_marginTop="50dp"
-                android:id="@+id/login"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:text="Login" />
+        <Button
+            android:layout_marginTop="50dp"
+            android:id="@+id/login"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:text="Login" />
 
-            <Button
-                android:id="@+id/goRegister"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="right"
-                android:text="Register" />
+        <Button
+            android:id="@+id/goRegister"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:text="Register" />
 
     </LinearLayout>
 

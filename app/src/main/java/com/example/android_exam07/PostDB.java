@@ -15,7 +15,7 @@ public class PostDB extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sql = "create table post_tb (_id integer primary key autoincrement, title text, content text, writer text)";
+        String sql = "create table post_tb (idx integer primary key autoincrement, title text, content text, writer text)";
         db.execSQL("insert into post_tb (title, content, writer) values ('1번째 메모', '첫번째 메모입니다.', '관리자')");
         db.execSQL("insert into post_tb (title, content, writer) values ('2번째 메모', '두번째 메모입니다.', '관리자')");
         db.execSQL("insert into post_tb (title, content, writer) values ('3번째 메모', '세번째 메모입니다.', '관리자')");
