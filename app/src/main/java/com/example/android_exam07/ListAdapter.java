@@ -1,12 +1,13 @@
 package com.example.android_exam07;
 
 import android.content.Context;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,7 +21,7 @@ public class ListAdapter extends RecyclerView.Adapter<ListHolder> {
     Context context;
     int resId;
     ArrayList<ListVO> datas;
-    private int cardPos = 0;
+    int cardPosition = 0;
 
     public ListAdapter(Context context, int resId, ArrayList<ListVO> datas) {
         this.context = context;
@@ -37,13 +38,43 @@ public class ListAdapter extends RecyclerView.Adapter<ListHolder> {
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                cardPos = holder.getBindingAdapterPosition();
-                if(cardPos != RecyclerView.NO_POSITION) {
-                    String strName = datas.get(cardPos).getWriter();
-                    Toast.makeText(context, strName + " : 글쓴이 이름", Toast.LENGTH_SHORT).show();
+                cardPosition = holder.getBindingAdapterPosition();
+                if(cardPosition != RecyclerView.NO_POSITION) {
+                    int itemId = datas.get(cardPosition).getIdx();
+                    Intent intent = new Intent(context, ContentActivity.class);
+                    intent.putExtra("id", itemId);
+                    context.startActivity(intent);
+                } else {
+                    Toast.makeText(context, "cardview.click : 존재하지 않는 아이템입니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+        holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                cardPosition = holder.getAdapterPosition();
+                if(cardPosition != RecyclerView.NO_POSITION) {
+                    // DB 삭제
+                    int itemId = datas.get(cardPosition).getIdx();
+
+                    ListDatabaseHelper helper = new ListDatabaseHelper(context);
+                    SQLiteDatabase db = helper.getWritableDatabase();
+                    db.execSQL("delete from users_tb where idx=?", new String[]{Integer.toString(itemId)});
+                    db.close();
+
+                    // 화면 갱신
+                    datas.remove(cardPosition);
+                    notifyItemRemoved(cardPosition);
+                    notifyItemRangeChanged(cardPosition, datas.size());
+                    Toast.makeText(context, "아이템 삭제됨", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context, "cardview.cclick : 존재하지 않는 아이템", Toast.LENGTH_SHORT).show();
+                }
+                return true;
+            }
+        });
+
         return holder;
     }
 

@@ -2,6 +2,7 @@ package com.example.android_exam07;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        회원가입 화면 이동
         goRegister = (Button)findViewById(R.id.goRegister);
         goRegister.setOnClickListener(this);
+
     }
 
     @Override
@@ -80,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 //로그인성공
                 Toast toast = Toast.makeText(MainActivity.this, "로그인 성공", Toast.LENGTH_SHORT);
                 toast.show();
+
                 //인텐트 생성 및 호출
                 Intent intent = new Intent(getApplicationContext(), ListActivity.class);
                 startActivity(intent);

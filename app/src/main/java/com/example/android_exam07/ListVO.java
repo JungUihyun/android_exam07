@@ -6,17 +6,6 @@ public class ListVO {
     private String content;
     private String writer;
 
-    public ListVO(int idx, String title, String content, String writer) {
-        this.idx = idx;
-        this.title = title;
-        this.content = content;
-        this.writer = writer;
-    }
-
-    public ListVO() {
-
-    }
-
     public int getIdx() {
         return idx;
     }
