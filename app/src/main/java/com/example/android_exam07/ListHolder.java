@@ -18,9 +18,9 @@ public class ListHolder extends RecyclerView.ViewHolder {
         super(itemView);
 
         cardView = itemView.findViewById(R.id.cardview);
-        title = (TextView)itemView.findViewById(R.id.title);
-        content = (TextView)itemView.findViewById(R.id.content);
-        writer = (TextView)itemView.findViewById(R.id.writer);
+        title = (TextView)itemView.findViewById(R.id.item_title);
+        content = (TextView)itemView.findViewById(R.id.item_content);
+        writer = (TextView)itemView.findViewById(R.id.item_writer);
 
     }
 }

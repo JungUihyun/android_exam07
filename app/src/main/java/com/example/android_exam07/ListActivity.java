@@ -37,7 +37,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
         btnAdd.setOnClickListener(this);
 
         datas = new ArrayList<>();
-//        getAllItems();
+        getAllItems();
 
         listAdapter = new ListAdapter(this, R.layout.custom_item, datas);
         recyclerView.setAdapter(listAdapter);
@@ -47,13 +47,14 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
     private void getAllItems() {
         ListDatabaseHelper helper = new ListDatabaseHelper(this);
         SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor rs = db.rawQuery("select idx, title, content, writer from list_tb order by idx", null);
+        Cursor rs = db.rawQuery("select idx, title, content from list_tb order by idx", null);
 
         while(rs.moveToNext()) {
             ListVO vo = new ListVO();
             vo.setIdx(rs.getInt(0));
             vo.setTitle(rs.getString(1));
             vo.setContent(rs.getString(2));
+//            vo.setWriter(rs.getString(3));
 
             datas.add(vo);
         }
@@ -75,7 +76,7 @@ public class ListActivity extends AppCompatActivity implements View.OnClickListe
 
         // 화면 갱신
         datas.clear();
-//        getAllItems();
+        getAllItems();
         listAdapter.notifyDataSetChanged();
     }
 }

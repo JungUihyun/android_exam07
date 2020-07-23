@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
@@ -17,12 +18,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Button goRegister, login;
     EditText userid, userpassword;
 
-    int version = 1;
-    DatabaseOpenHelper helper;
-    SQLiteDatabase database;
+//    int version = 1;
+//    DatabaseOpenHelper helper;
+//    SQLiteDatabase database;
+//
+//    String sql;
+//    Cursor cursor;
 
-    String sql;
-    Cursor cursor;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,20 +33,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         setTitle("로그인 화면");
 
+
+
 //        로그인 처리
         userid = (EditText)findViewById(R.id.userid);
         userpassword = (EditText)findViewById(R.id.userpassword);
         login = (Button)findViewById(R.id.login);
 
-        helper = new DatabaseOpenHelper(MainActivity.this, DatabaseOpenHelper.tableName, null, version);
-        database = helper.getWritableDatabase();
+//        helper = new DatabaseOpenHelper(MainActivity.this, DatabaseOpenHelper.tableName, null, version);
+//        database = helper.getWritableDatabase();
 
         login.setOnClickListener(this);
 
 //        회원가입 화면 이동
         goRegister = (Button)findViewById(R.id.goRegister);
         goRegister.setOnClickListener(this);
-
     }
 
     @Override
@@ -55,40 +59,63 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String id = userid.getText().toString();
             String password = userpassword.getText().toString();
 
+            //  공유프리퍼런스
+            SharedPreferences sf = getSharedPreferences("sFile", MODE_PRIVATE);
+            String confirmId = sf.getString("confirmId", "");
+            String confirmPassword = sf.getString("confirmPassword", "");
+
             if(id.length() == 0 || password.length() == 0) {
                 // 아이디와 비밀번호는 필수 입력사항입니다.
                 Toast.makeText(MainActivity.this, "아이디와 비밀번호는 필수 입력사항입니다.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            sql = "SELECT id FROM " + helper.tableName + " WHERE id = '" + id + "'";
-            cursor = database.rawQuery(sql, null);
+            if(id.equals(confirmId) && password.equals(confirmPassword)) {
+                Toast.makeText(this, "저장된 데이터와 동일한 값", Toast.LENGTH_SHORT).show();
 
-            if(cursor.getCount() != 1) {
-                // 아이디가 틀렸습니다.
-                Toast.makeText(MainActivity.this, "존재하지 않는 아이디입니다.", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            sql = "SELECT password FROM "+ helper.tableName + " WHERE id = '" + id + "'";
-            cursor = database.rawQuery(sql, null);
-
-            cursor.moveToNext();
-            if(!password.equals(cursor.getString(0))){
-                //비밀번호가 틀렸습니다.
-                Toast toast = Toast.makeText(MainActivity.this, "비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT);
-                toast.show();
-            }else{
-                //로그인성공
-                Toast toast = Toast.makeText(MainActivity.this, "로그인 성공", Toast.LENGTH_SHORT);
-                toast.show();
+                SharedPreferences sharedPreferences = getSharedPreferences("sFile",MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("userId", id);
+                editor.putString("userPassword", password);
+                editor.putString("userName", "test");
 
                 //인텐트 생성 및 호출
                 Intent intent = new Intent(getApplicationContext(), ListActivity.class);
                 startActivity(intent);
                 finish();
+            } else {
+                Toast.makeText(this, "존재하지 않는 아이디입니다.", Toast.LENGTH_SHORT).show();
+                return;
             }
-            cursor.close();
+
+//            sql = "SELECT id FROM " + helper.tableName + " WHERE id = '" + id + "'";
+//            cursor = database.rawQuery(sql, null);
+//
+//            if(cursor.getCount() != 1) {
+//                // 아이디가 틀렸습니다.
+//                Toast.makeText(MainActivity.this, "존재하지 않는 아이디입니다.", Toast.LENGTH_SHORT).show();
+//                return;
+//            }
+
+//            sql = "SELECT password FROM "+ helper.tableName + " WHERE id = '" + id + "'";
+//            cursor = database.rawQuery(sql, null);
+//
+//            cursor.moveToNext();
+//            if(!password.equals(cursor.getString(0))){
+//                //비밀번호가 틀렸습니다.
+//                Toast toast = Toast.makeText(MainActivity.this, "비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT);
+//                toast.show();
+//            }else{
+//                //로그인성공
+//                Toast toast = Toast.makeText(MainActivity.this, "로그인 성공", Toast.LENGTH_SHORT);
+//                toast.show();
+//
+//                //인텐트 생성 및 호출
+//                Intent intent = new Intent(getApplicationContext(), ListActivity.class);
+//                startActivity(intent);
+//                finish();
+//            }
+//            cursor.close();
         }
     }
 }

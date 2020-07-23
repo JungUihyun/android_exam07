@@ -40,12 +40,12 @@ public class ListAdapter extends RecyclerView.Adapter<ListHolder> {
             public void onClick(View view) {
                 cardPosition = holder.getBindingAdapterPosition();
                 if(cardPosition != RecyclerView.NO_POSITION) {
-                    int itemId = datas.get(cardPosition).getIdx();
+                    int idx = datas.get(cardPosition).getIdx();
                     Intent intent = new Intent(context, ContentActivity.class);
-                    intent.putExtra("id", itemId);
+                    intent.putExtra("idx", idx);
                     context.startActivity(intent);
                 } else {
-                    Toast.makeText(context, "cardview.click : 존재하지 않는 아이템입니다.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "존재하지 않는 아이템입니다.", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -53,23 +53,23 @@ public class ListAdapter extends RecyclerView.Adapter<ListHolder> {
         holder.cardView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
+
                 cardPosition = holder.getAdapterPosition();
                 if(cardPosition != RecyclerView.NO_POSITION) {
                     // DB 삭제
-                    int itemId = datas.get(cardPosition).getIdx();
+                    int idx = datas.get(cardPosition).getIdx();
 
                     ListDatabaseHelper helper = new ListDatabaseHelper(context);
                     SQLiteDatabase db = helper.getWritableDatabase();
-                    db.execSQL("delete from users_tb where idx=?", new String[]{Integer.toString(itemId)});
+                    db.execSQL("delete from list_tb where idx=?", new String[]{Integer.toString(idx)});
                     db.close();
 
-                    // 화면 갱신
                     datas.remove(cardPosition);
                     notifyItemRemoved(cardPosition);
                     notifyItemRangeChanged(cardPosition, datas.size());
-                    Toast.makeText(context, "아이템 삭제됨", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "아이템 삭제", Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(context, "cardview.cclick : 존재하지 않는 아이템", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "존재하지 않는 아이템", Toast.LENGTH_SHORT).show();
                 }
                 return true;
             }
@@ -82,18 +82,14 @@ public class ListAdapter extends RecyclerView.Adapter<ListHolder> {
     public void onBindViewHolder(@NonNull ListHolder holder, int position) {
         CardView cardView = holder.cardView;
         TextView writer = holder.writer;
+        TextView title = holder.title;
         TextView content = holder.content;
 
         ListVO vo = datas.get(position);
+        title.setText(vo.getTitle());
         writer.setText(vo.getWriter());
         content.setText(vo.getContent());
 
-        setAnimation(holder.cardView, position);
-    }
-
-    private void setAnimation(CardView cardView, int position) {
-        Animation anim = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
-        cardView.startAnimation(anim);
     }
 
     @Override

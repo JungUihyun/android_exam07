@@ -26,11 +26,11 @@ public class DatabaseOpenHelper extends SQLiteOpenHelper {
         try { db.execSQL(sql); } catch (SQLException e){ e.printStackTrace(); }
     }
 
-    public void insertUser(SQLiteDatabase db, String id, String password){
+    public void insertUser(SQLiteDatabase db, String id, String password, String name){
         Log.i("tag","회원가입을 했을때 실행함");
         db.beginTransaction();
         try {
-            String sql = "INSERT INTO " + tableName + "(id, password)" + "values('"+ id +"', '"+password+"')";
+            String sql = "INSERT INTO " + tableName + "(id, password, name)" + "values('"+ id +"', '"+password+"', '"+name+"')";
             db.execSQL(sql);
             db.setTransactionSuccessful();
         } catch (Exception e){
